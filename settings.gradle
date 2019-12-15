@@ -1,0 +1,2 @@
+include ':app', ':baseimplementation'
+rootProject.name='Expense Manager'

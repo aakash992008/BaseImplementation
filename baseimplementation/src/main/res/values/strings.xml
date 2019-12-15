@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">BaseImplementation</string>
+
+    <string name="retrofit_error">Retrofit Error</string>
+
+    <string name="unable_to_reach_server">Unable to reach server</string>
+</resources>
