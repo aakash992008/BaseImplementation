@@ -10,12 +10,16 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import java.lang.IllegalStateException
 
 abstract class BaseFragment <DB:ViewDataBinding> : Fragment() {
 
     lateinit var mBinding: DB
     private var mProgressBarDialog: Dialog? = null
     private var progressDialogView: View? = null
+    var navController: NavController?=null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,6 +27,7 @@ abstract class BaseFragment <DB:ViewDataBinding> : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         mBinding=DataBindingUtil.inflate(inflater,getLayout(),container,false)
+
         return mBinding.root
     }
 
@@ -45,6 +50,10 @@ abstract class BaseFragment <DB:ViewDataBinding> : Fragment() {
     abstract fun onBaseResume()
 
     abstract fun onBasePause()
+
+    abstract fun initialisingBlock()
+
+    abstract fun viewInitialisingBlock(savedInstanceState: Bundle?)
 
 
     fun setProgressBarView(view: View) {
@@ -72,4 +81,18 @@ abstract class BaseFragment <DB:ViewDataBinding> : Fragment() {
         mProgressBarDialog?.dismiss()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initialisingBlock()
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        try{
+            navController=Navigation.findNavController(mBinding.root)
+        }catch (e:IllegalStateException){
+            e.printStackTrace()
+        }
+        viewInitialisingBlock(savedInstanceState)
+    }
 }
